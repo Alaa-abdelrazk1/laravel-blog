@@ -5,13 +5,15 @@ Create
 @section('content')
 <div class="card  mt-5">
     <div class="card-header">
-        Post info : 
+        Post info :
     </div>
     <div class="card-body">
-        <h5 class="card-title">Title : {{$post->title}}</h5>
-        <h5 class="card-title">Description : </h5>
-        <p>{{$post->description}}</p>
-        <h5 class="card-text">Created At : {{$post->created_at->format("Y-m-d")}}</h5>
+        @foreach ($post as $data)
+
+        <h5 class="card-title">Title : {{$data->title}}</h5>
+        <h5 class="card-title">Description :{{$data->description}} </h5>
+        <h5 class="card-text">Created At : {{$data->created_at->format("Y-m-d")}}</h5>
+        @endforeach
 
     </div>
 
@@ -22,10 +24,15 @@ Create
         Post creator info:
     </div>
     <div class="card-body">
-        <h5 class="card-title">Name: {{$post->user->name}}</h5>
-        <h5 class="card-title">Email : {{$post->user->email}}</h5>
+    @foreach ($post as $data)
+
+        <h5 class="card-title">Name: {{$data->user->name}}</h5>
+        <h5 class="card-title">Email : {{$data->user->email}}</h5>
+
+        @endforeach
+
     </div>
- 
+
 </div>
 
 @endsection

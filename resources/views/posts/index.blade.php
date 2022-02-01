@@ -13,6 +13,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Title</th>
+                    <th scope="col">Slug</th>
                     <th scope="col">Description</th>
                     <th scope="col">Posted By</th>
                     <th scope="col">Created At</th>
@@ -26,12 +27,13 @@
                 <tr>
                     <th scope="row">{{$post->id}}</th>
                     <td>{{$post->title}}</td>
+                    <td>{{$post->slug}}</td>
                     <td>{{$post->description}}</td>
                     <td>{{isset($post->user)?  $post->user->name:"not found"}}</td>
                     <td>{{$post->created_at->format("Y-m-d")}}</td>
                     <td>
-                        <a  href="{{route('posts.show',['post'=>$post->id])}}" class="btn btn-primary">View</a>
-                        <a href="{{route('posts.edit',['post'=>$post->id])}}" class="btn btn-secondary">Edit</a>
+                        <a  href="{{route('posts.show',['post'=>$post->slug])}}" class="btn btn-primary">View</a>
+                        <a href="{{route('posts.edit',['post'=>$post->slug])}}" class="btn btn-secondary">Edit</a>
                         <form method='post' action="{{route('posts.destroy',['post'=>$post->id])}}" style="display:inline">
                                 @csrf
                                 @method('DELETE')
