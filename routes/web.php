@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Postcontroller;
+use Laravel\Socialite\Facades\Socialite;
 use App\Models\post;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,5 +25,63 @@ Route::get('/posts/{post}',[Postcontroller::class,'show'])->name('posts.show')->
 Route::delete('/posts/{post}',[Postcontroller::class,'destroy'])->name('posts.destroy');
 
 Auth::routes();
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('github')->redirect();
+})->name('auth.github');
+
+
+Route::get('/auth2/redirect', function () {
+    return Socialite::driver('google')->redirect();
+})->name('auth.google');
+
+
+Route::get('/auth/callback', function () {
+    $githubUser = Socialite::driver('github')->user();
+    $user = User::where('github_id', $githubUser->id)->first();
+    if ($user) {
+        $user->update([
+            'github_token' => $githubUser->token,
+            'github_refresh_token' => $githubUser->refreshToken,
+        ]);
+    } else {
+        $user = User::create([
+            'name' => $githubUser->name,
+            'email' => $githubUser->email,
+            'github_id' => $githubUser->id,
+            'github_token' => $githubUser->token,
+            'github_refresh_token' => $githubUser->refreshToken,
+        ]);
+    }
+
+    Auth::login($user,true);
+
+    return redirect()->route('posts.index');
+    // $user->token
+});
+
+Route::get('/auth2/callback', function () {
+    $googleUser = Socialite::driver('google')->user();
+    $user = User::where('google_id', $googleUser->id)->first();
+    if ($user) {
+        $user->update([
+            'google_token' => $googleUser->token,
+            'google_refresh_token' => $googleUser->refreshToken,
+        ]);
+    } else {
+        $user = User::create([
+            'name' => $googleUser->name,
+            'email' => $googleUser->email,
+            'google_id' => $googleUser->id,
+            'google_token' => $googleUser->token,
+            'google_refresh_token' => $googleUser->refreshToken,
+        ]);
+    }
+
+    Auth::login($user,true);
+
+    return redirect()->route('posts.index');
+    // $user->token
+});
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

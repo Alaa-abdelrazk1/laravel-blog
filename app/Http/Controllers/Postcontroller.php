@@ -63,7 +63,7 @@ class Postcontroller extends Controller
             'description' => $req['description'],
             'user_id' => $req['user_name'],
         ]);
-        return redirect()->route('posts.index');
+
     }
 
 
